@@ -50,22 +50,22 @@ const Footer = () => {
                   <ShoppingBag className="h-6 w-6 text-white" />
                 </div>
                 <span className="text-xl font-bold bg-gradient-to-r from-emerald-400 to-violet-400 bg-clip-text text-transparent">
-                  OfficeStore Pro
+                  Maumbica Comercial
                 </span>
               </Link>
               <p className="text-gray-400 mb-6 leading-relaxed">
                 Sua empresa de confiança para soluções completas em tecnologia, 
                 mobiliário, papelaria e muito mais. Há mais de 15 anos servindo 
-                empresas em todo Portugal.
+                empresas em todo Moçambique.
               </p>
               <div className="space-y-3">
                 <div className="flex items-center text-gray-400">
                   <MapPin className="h-5 w-5 mr-3 text-emerald-400" />
-                  <span className="text-sm">Av. da Liberdade, 123, Lisboa</span>
+                  <span className="text-sm">Av. Filipe Samuel Magaia, Niassa</span>
                 </div>
                 <div className="flex items-center text-gray-400">
                   <Phone className="h-5 w-5 mr-3 text-emerald-400" />
-                  <span className="text-sm">+351 21 123 4567</span>
+                  <span className="text-sm">+258 84 104 1035</span>
                 </div>
                 <div className="flex items-center text-gray-400">
                   <Mail className="h-5 w-5 mr-3 text-emerald-400" />
@@ -145,7 +145,7 @@ const Footer = () => {
         <div className="border-t border-gray-800 py-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-gray-400 text-sm mb-4 md:mb-0">
-              © 2025 OfficeStore Pro. Todos os direitos reservados.
+              © 2025 Maumbica Comercial. Todos os direitos reservados.
             </div>
             <div className="flex space-x-6">
               {socialLinks.map((social) => {

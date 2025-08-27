@@ -28,13 +28,13 @@ const Contact = () => {
     {
       icon: MapPin,
       title: 'Endereço',
-      details: ['Avenida da Liberdade, 123', '1250-096 Lisboa, Portugal'],
+      details: ['Av. 25 de Setembro, Maputo', 'Moçambique'],
       color: 'from-emerald-500 to-emerald-600',
     },
     {
       icon: Phone,
       title: 'Telefone',
-      details: ['+351 21 123 4567', '+351 91 234 5678'],
+      details: ['+258 21 123 456', '+258 84 234 5678'],
       color: 'from-violet-500 to-violet-600',
     },
     {
@@ -230,7 +230,7 @@ const Contact = () => {
                   Visite-nos
                 </h3>
                 <p className="text-gray-300 mb-6">
-                  Nossa loja física está localizada no coração de Lisboa, 
+                  Nossa loja física está localizada no coração de Maputo, 
                   com fácil acesso de transporte público e estacionamento disponível.
                 </p>
                 <div className="aspect-w-16 aspect-h-9 bg-gray-700 rounded-lg">

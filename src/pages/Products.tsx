@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Filter, Grid, List, Star, ShoppingCart, Eye, Package } from 'lucide-react';
+import { Search, Grid, List, Star, ShoppingCart, Eye, Package } from 'lucide-react';
 import OrderModal from '../components/OrderModal';
 import ProductDetailsModal from '../components/ProductDetailsModal';
 
@@ -7,6 +7,8 @@ const Products = () => {
   const [viewMode, setViewMode] = useState('grid');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [orderModal, setOrderModal] = useState<{
     isOpen: boolean;
     product: any;
@@ -31,82 +33,77 @@ const Products = () => {
     }
   }, []);
 
-  const categories = [
-    { id: 'all', name: 'Todos os Produtos' },
-    { id: 'technology', name: 'Tecnologia' },
-    { id: 'automotive', name: 'Automóvel' },
-    { id: 'telecommunications', name: 'Telecomunicações' },
-    { id: 'audiovisual', name: 'Audiovisual' },
-    { id: 'appliances', name: 'Eletrodomésticos' },
-    { id: 'furniture', name: 'Mobiliário' },
-    { id: 'stationery', name: 'Papelaria' },
-    { id: 'sports', name: 'Desporto' },
-    { id: 'clothing', name: 'Vestuário' },
-    { id: 'shoes', name: 'Calçado' },
-  ];
+  type ApiProduct = {
+    nome: string;
+    categoria: string;
+    descricao: string;
+    preco: number;
+    especificacoes?: string;
+    caracteristicas_principais?: string;
+    id: number;
+    foto: string;
+    created_at?: string;
+  };
 
-  const products = [
-    {
-      id: 1,
-      name: 'MacBook Pro 16" M3',
-      category: 'technology',
-      price: '€2,499.99',
-      rating: 4.9,
-      image: 'https://images.pexels.com/photos/18105/pexels-photo.jpg',
-      discount: '10%',
-      description: 'Laptop profissional com chip M3 para máximo desempenho',
-    },
-    {
-      id: 2,
-      name: 'Sistema Audio Premium',
-      category: 'audiovisual',
-      price: '€1,899.99',
-      rating: 4.8,
-      image: 'https://images.pexels.com/photos/164938/pexels-photo-164938.jpeg',
-      discount: null,
-      description: 'Sistema de som profissional para eventos e apresentações',
-    },
-    {
-      id: 3,
-      name: 'Cadeira Executive Pro',
-      category: 'furniture',
-      price: '€599.99',
-      rating: 4.7,
-      image: 'https://images.pexels.com/photos/586078/pexels-photo-586078.jpeg',
-      discount: '15%',
-      description: 'Cadeira ergonômica de couro para escritório executivo',
-    },
-    {
-      id: 4,
-      name: 'Kit Papelaria Completo',
-      category: 'stationery',
-      price: '€89.99',
-      rating: 4.6,
-      image: 'https://images.pexels.com/photos/159751/book-address-book-learning-learn-159751.jpeg',
-      discount: null,
-      description: 'Kit completo com todos os materiais essenciais de escritório',
-    },
-    {
-      id: 5,
-      name: 'Smartphone Samsung Galaxy',
-      category: 'telecommunications',
-      price: '€899.99',
-      rating: 4.8,
-      image: 'https://images.pexels.com/photos/788946/pexels-photo-788946.jpeg',
-      discount: '20%',
-      description: 'Smartphone de última geração com câmera profissional',
-    },
-    {
-      id: 6,
-      name: 'Frigorífico Inox 500L',
-      category: 'appliances',
-      price: '€1,299.99',
-      rating: 4.5,
-      image: 'https://images.pexels.com/photos/280230/pexels-photo-280230.jpeg',
-      discount: null,
-      description: 'Frigorífico de inox com tecnologia No Frost',
-    },
-  ];
+  type UiProduct = {
+    id: number;
+    name: string;
+    category: string;
+    price: number;
+    rating: number;
+    image: string;
+    discount: string | null;
+    description: string;
+    specifications?: string;
+    mainFeatures?: string;
+  };
+
+  const [products, setProducts] = useState<UiProduct[]>([]);
+  const [categories, setCategories] = useState<{ id: string; name: string }[]>([
+    { id: 'all', name: 'Todos os Produtos' },
+  ]);
+
+  const formatMZN = (value: number) =>
+    value > 0
+      ? new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN', minimumFractionDigits: 2 }).format(value)
+      : 'Sob consulta';
+
+  React.useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const res = await fetch('https://maubica.onrender.com/products?skip=0&limit=100', { headers: { accept: 'application/json' } });
+        if (!res.ok) throw new Error(`Erro ao carregar produtos (${res.status})`);
+        const data: ApiProduct[] = await res.json();
+        const mapped: UiProduct[] = data.map((p) => {
+          const image = p.foto?.startsWith('http') ? p.foto : `https://maubica.onrender.com/${p.foto}`;
+          return {
+            id: p.id,
+            name: p.nome,
+            category: p.categoria,
+            price: p.preco,
+            rating: 4.7,
+            image,
+            discount: null,
+            description: p.descricao,
+            specifications: p.especificacoes,
+            mainFeatures: p.caracteristicas_principais,
+          };
+        });
+        setProducts(mapped);
+        const unique = Array.from(new Set(mapped.map((p) => p.category))).filter(Boolean);
+        setCategories([{ id: 'all', name: 'Todos os Produtos' }, ...unique.map((c) => ({ id: c, name: c }))]);
+      } catch (e: any) {
+        setError(e?.message || 'Falha ao carregar produtos');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  // removed static categories and products; now loaded from API above
 
   const handleOrderClick = (product: any) => {
     setOrderModal({
@@ -273,7 +270,7 @@ const Products = () => {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-xl font-bold bg-gradient-to-r from-emerald-400 to-violet-400 bg-clip-text text-transparent">
-                    {product.price}
+                    {formatMZN(product.price)}
                   </span>
                   <button 
                     onClick={() => handleOrderClick(product)}
@@ -288,7 +285,15 @@ const Products = () => {
           ))}
         </div>
 
-        {filteredProducts.length === 0 && (
+        {isLoading && (
+          <div className="text-center py-8 text-gray-400">Carregando produtos...</div>
+        )}
+
+        {error && !isLoading && (
+          <div className="text-center py-8 text-red-400">{error}</div>
+        )}
+
+        {filteredProducts.length === 0 && !isLoading && !error && (
           <div className="text-center py-12">
             <div className="text-center">
               <Search className="h-16 w-16 text-gray-600 mx-auto mb-4" />

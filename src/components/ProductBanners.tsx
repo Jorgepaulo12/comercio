@@ -27,7 +27,7 @@ const ProductBanners = () => {
     {
       id: 3,
       title: 'Entrega Rápida',
-      subtitle: 'Em todo Portugal',
+      subtitle: 'Em todo Moçambique',
       description: 'Receba seus produtos em 24-48h',
       image: 'https://images.pexels.com/photos/906494/pexels-photo-906494.jpeg',
       cta: 'Saiba Mais',

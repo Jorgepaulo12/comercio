@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Star, ShoppingCart, Package, Heart, Share2, Truck, Shield, Award, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, Star, Package, Heart, Share2, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface ProductDetailsModalProps {
   isOpen: boolean;
@@ -8,11 +8,13 @@ interface ProductDetailsModalProps {
     id: number;
     name: string;
     category: string;
-    price: string;
+    price: number;
     rating: number;
     image: string;
     discount?: string | null;
     description: string;
+    specifications?: string;
+    mainFeatures?: string;
   } | null;
   onOrder: (product: any) => void;
 }
@@ -28,29 +30,11 @@ const ProductDetailsModal: React.FC<ProductDetailsModalProps> = ({
 
   if (!isOpen || !product) return null;
 
-  // Simular múltiplas imagens do produto
-  const productImages = [
-    product.image,
-    'https://images.pexels.com/photos/356056/pexels-photo-356056.jpeg',
-    'https://images.pexels.com/photos/788946/pexels-photo-788946.jpeg',
-  ];
+  const formatMZN = (value: number) =>
+    new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN', minimumFractionDigits: 2 }).format(value);
 
-  const specifications = [
-    { label: 'Marca', value: 'Premium Brand' },
-    { label: 'Modelo', value: 'Professional Series' },
-    { label: 'Garantia', value: '2 Anos' },
-    { label: 'Origem', value: 'União Europeia' },
-    { label: 'Certificação', value: 'CE, ISO 9001' },
-  ];
-
-  const features = [
-    'Design ergonômico e moderno',
-    'Tecnologia de última geração',
-    'Eficiência energética classe A+',
-    'Compatível com sistemas existentes',
-    'Suporte técnico especializado',
-    'Instalação e configuração incluídas',
-  ];
+  // Galeria simples (repete a mesma imagem se não houver mais)
+  const productImages = [product.image, product.image, product.image];
 
   const nextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % productImages.length);
@@ -175,46 +159,35 @@ const ProductDetailsModal: React.FC<ProductDetailsModalProps> = ({
 
                 <div className="flex items-center space-x-4 mb-6">
                   <span className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-violet-400 bg-clip-text text-transparent">
-                    {product.price}
+                    {formatMZN(product.price)}
                   </span>
-                  {product.discount && (
+                  {product.price > 0 && product.discount && (
                     <span className="text-xl text-gray-500 line-through">
-                      €{(parseFloat(product.price.replace('€', '').replace(',', '')) * 1.2).toFixed(2)}
+                      {formatMZN(product.price * 1.2)}
                     </span>
                   )}
                 </div>
 
-                <p className="text-gray-300 leading-relaxed mb-6">
-                  {product.description}. Este produto representa o que há de melhor em qualidade e inovação, 
-                  desenvolvido especificamente para atender às necessidades mais exigentes do mercado profissional.
+                <p className="text-gray-300 leading-relaxed mb-6 whitespace-pre-line">
+                  {product.description}
                 </p>
               </div>
 
-              {/* Features */}
-              <div>
-                <h3 className="text-xl font-semibold text-white mb-4">Características Principais</h3>
-                <div className="grid grid-cols-1 gap-2">
-                  {features.map((feature, index) => (
-                    <div key={index} className="flex items-center text-gray-300">
-                      <div className="w-2 h-2 bg-emerald-400 rounded-full mr-3 flex-shrink-0"></div>
-                      <span>{feature}</span>
-                    </div>
-                  ))}
+              {product.mainFeatures && (
+                <div>
+                  <h3 className="text-xl font-semibold text-white mb-4">Características Principais</h3>
+                  <p className="text-gray-300 whitespace-pre-line">{product.mainFeatures}</p>
                 </div>
-              </div>
+              )}
 
-              {/* Specifications */}
-              <div>
-                <h3 className="text-xl font-semibold text-white mb-4">Especificações</h3>
-                <div className="bg-gray-700/50 rounded-lg p-4 space-y-3">
-                  {specifications.map((spec, index) => (
-                    <div key={index} className="flex justify-between items-center">
-                      <span className="text-gray-400">{spec.label}:</span>
-                      <span className="text-white font-medium">{spec.value}</span>
-                    </div>
-                  ))}
+              {product.specifications && (
+                <div>
+                  <h3 className="text-xl font-semibold text-white mb-4">Especificações</h3>
+                  <div className="bg-gray-700/50 rounded-lg p-4">
+                    <p className="text-gray-300 whitespace-pre-line">{product.specifications}</p>
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Quantity and Order */}
               <div className="space-y-4">
@@ -250,21 +223,7 @@ const ProductDetailsModal: React.FC<ProductDetailsModalProps> = ({
                 </button>
               </div>
 
-              {/* Trust badges */}
-              <div className="grid grid-cols-3 gap-4 pt-6 border-t border-gray-700">
-                <div className="text-center">
-                  <Truck className="h-8 w-8 text-emerald-400 mx-auto mb-2" />
-                  <p className="text-sm text-gray-300">Entrega Rápida</p>
-                </div>
-                <div className="text-center">
-                  <Shield className="h-8 w-8 text-emerald-400 mx-auto mb-2" />
-                  <p className="text-sm text-gray-300">Garantia 2 Anos</p>
-                </div>
-                <div className="text-center">
-                  <Award className="h-8 w-8 text-emerald-400 mx-auto mb-2" />
-                  <p className="text-sm text-gray-300">Qualidade Premium</p>
-                </div>
-              </div>
+              {/* Badges opcionais removidos a pedido do cliente */}
             </div>
           </div>
         </div>

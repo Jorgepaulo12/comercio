@@ -7,7 +7,7 @@ interface OrderModalProps {
   product?: {
     id: number;
     name: string;
-    price: string;
+    price: number;
     image: string;
   } | null;
 }
@@ -30,14 +30,43 @@ const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose, product }) => 
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Pedido enviado:', { ...formData, product });
-    setIsSubmitted(true);
-    
-    // Reset form after 3 seconds and close modal
-    setTimeout(() => {
-      setIsSubmitted(false);
+    if (!product) return;
+    try {
+      const payload = {
+        nome: formData.name,
+        endereco: formData.location,
+        email: formData.email,
+        contacto: formData.contact,
+        mensagem: formData.notes,
+        product_id: product.id,
+        quantidade: Number(formData.quantity) || 1,
+      };
+      const res = await fetch('https://maubica.onrender.com/orders', {
+        method: 'POST',
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error('Falha ao enviar pedido');
+      setIsSubmitted(true);
+
+      // WhatsApp redirect com link do produto
+      const phone = '258860289475';
+      const productUrl = `${window.location.origin}/produtos?search=${encodeURIComponent(product.name)}&id=${product.id}`;
+      const message = `Novo pedido%0A%0AProduto: ${encodeURIComponent(product.name)}%0APreco: ${encodeURIComponent(
+        formatMZN(product.price)
+      )}%0AQtd: ${payload.quantidade}%0ALink: ${encodeURIComponent(productUrl)}%0A%0ACliente: ${encodeURIComponent(payload.nome)}%0AContacto: ${encodeURIComponent(
+        payload.contacto
+      )}%0AEmail: ${encodeURIComponent(payload.email)}%0AEndereco: ${encodeURIComponent(payload.endereco)}%0AObservacoes: ${encodeURIComponent(
+        payload.mensagem || ''
+      )}`;
+      window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+
+      // Reset and close
       setFormData({
         name: '',
         location: '',
@@ -47,10 +76,15 @@ const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose, product }) => 
         notes: '',
       });
       onClose();
-    }, 3000);
+    } catch (err) {
+      alert('Não foi possível enviar o pedido. Tente novamente.');
+    }
   };
 
   if (!isOpen) return null;
+
+  const formatMZN = (value: number) =>
+    new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN', minimumFractionDigits: 2 }).format(value);
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
@@ -92,7 +126,7 @@ const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose, product }) => 
                     />
                     <div>
                       <h4 className="text-lg font-semibold text-white">{product.name}</h4>
-                      <p className="text-emerald-400 font-bold">{product.price}</p>
+                      <p className="text-emerald-400 font-bold">{formatMZN(product.price)}</p>
                     </div>
                   </div>
                 </div>
@@ -154,7 +188,7 @@ const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose, product }) => 
                         onChange={handleInputChange}
                         required
                         className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-emerald-500 transition-colors duration-300"
-                        placeholder="Cidade, Distrito"
+                        placeholder="Cidade, Província"
                       />
                     </div>
                   </div>
@@ -173,7 +207,7 @@ const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose, product }) => 
                         onChange={handleInputChange}
                         required
                         className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-emerald-500 transition-colors duration-300"
-                        placeholder="+351 xxx xxx xxx"
+                        placeholder="+258 xx xxx xxxx"
                       />
                     </div>
                   </div>

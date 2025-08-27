@@ -42,7 +42,7 @@ const About = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Sobre a <span className="bg-gradient-to-r from-emerald-400 to-violet-400 bg-clip-text text-transparent">OfficeStore Pro</span>
+              Sobre a <span className="bg-gradient-to-r from-emerald-400 to-violet-400 bg-clip-text text-transparent">Maumbica Comercial</span>
             </h1>
             <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
               Somos uma empresa líder no fornecimento de soluções completas para empresas, 
@@ -63,8 +63,8 @@ const About = () => {
               </h2>
               <div className="space-y-6 text-gray-300 leading-relaxed">
                 <p>
-                  Fundada em 2009, a OfficeStore Pro nasceu com o objetivo de revolucionar 
-                  a forma como as empresas portuguesas adquirem seus produtos e equipamentos essenciais. 
+                  Fundada em 2009, a Maumbica comercial nasceu com o objetivo de revolucionar 
+                  a forma como as empresas moçambicanas adquirem seus produtos e equipamentos essenciais. 
                   O que começou como uma pequena loja especializada em informática, 
                   rapidamente evoluiu para se tornar um dos maiores fornecedores multissectoriais do país.
                 </p>

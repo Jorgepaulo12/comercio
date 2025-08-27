@@ -19,48 +19,63 @@ const FeaturedProducts = () => {
     product: null,
   });
 
-  const products = [
-    {
-      id: 1,
-      name: 'Laptop Profissional HP',
-      category: 'Tecnologia',
-      price: '€899.99',
-      rating: 4.8,
-      image: 'https://images.pexels.com/photos/18105/pexels-photo.jpg',
-      discount: '15%',
-      description: 'Laptop profissional de alta performance para trabalho intensivo',
-    },
-    {
-      id: 2,
-      name: 'Sistema de Som Premium',
-      category: 'Audiovisual',
-      price: '€1,299.99',
-      rating: 4.9,
-      image: 'https://images.pexels.com/photos/164938/pexels-photo-164938.jpeg',
-      discount: null,
-      description: 'Sistema de som profissional com qualidade de estúdio',
-    },
-    {
-      id: 3,
-      name: 'Cadeira Ergonômica Executive',
-      category: 'Mobiliário',
-      price: '€459.99',
-      rating: 4.7,
-      image: 'https://images.pexels.com/photos/586078/pexels-photo-586078.jpeg',
-      discount: '20%',
-      description: 'Cadeira ergonômica de couro premium para escritório',
-    },
-    {
-      id: 4,
-      name: 'Kit Completo Papelaria',
-      category: 'Papelaria',
-      price: '€79.99',
-      rating: 4.6,
-      image: 'https://images.pexels.com/photos/159751/book-address-book-learning-learn-159751.jpeg',
-      discount: null,
-      description: 'Kit completo com todos os materiais essenciais de escritório',
-    },
-  ];
+  type ApiProduct = {
+    nome: string;
+    categoria: string;
+    descricao: string;
+    preco: number;
+    especificacoes?: string;
+    caracteristicas_principais?: string;
+    id: number;
+    foto: string;
+    created_at?: string;
+  };
+
+  type UiProduct = {
+    id: number;
+    name: string;
+    category: string;
+    price: number;
+    rating: number;
+    image: string;
+    discount: string | null;
+    description: string;
+    specifications?: string;
+    mainFeatures?: string;
+  };
+
+  const [products, setProducts] = React.useState<UiProduct[]>([]);
+  const formatMZN = (value: number) =>
+    value > 0
+      ? new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN', minimumFractionDigits: 2 }).format(value)
+      : 'Sob consulta';
+
+  React.useEffect(() => {
+    const fetchFeatured = async () => {
+      try {
+        const res = await fetch('https://maubica.onrender.com/products?skip=0&limit=8', { headers: { accept: 'application/json' } });
+        if (!res.ok) return;
+        const data: ApiProduct[] = await res.json();
+        const mapped: UiProduct[] = data.map((p) => {
+          const image = p.foto?.startsWith('http') ? p.foto : `https://maubica.onrender.com/${p.foto}`;
+          return {
+            id: p.id,
+            name: p.nome,
+            category: p.categoria,
+            price: p.preco,
+            rating: 4.7,
+            image,
+            discount: null,
+            description: p.descricao,
+            specifications: p.especificacoes,
+            mainFeatures: p.caracteristicas_principais,
+          };
+        });
+        setProducts(mapped);
+      } catch {}
+    };
+    fetchFeatured();
+  }, []);
 
   const handleOrderClick = (product: any) => {
     setOrderModal({
@@ -153,7 +168,7 @@ const FeaturedProducts = () => {
                 </h3>
                 <div className="flex items-center justify-between">
                   <span className="text-xl font-bold bg-gradient-to-r from-emerald-400 to-violet-400 bg-clip-text text-transparent">
-                    {product.price}
+                    {formatMZN(product.price)}
                   </span>
                   <button 
                     onClick={() => handleOrderClick(product)}
