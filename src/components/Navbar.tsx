@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ShoppingBag, Search } from 'lucide-react';
+import { Menu, X, Search } from 'lucide-react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,8 +38,12 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center space-x-2 group">
-            <div className="p-2 bg-gradient-to-r from-emerald-500 to-violet-500 rounded-lg transform group-hover:scale-110 transition-transform duration-300">
-              <ShoppingBag className="h-6 w-6 text-white" />
+            <div className="transform group-hover:scale-110 transition-transform duration-300">
+              <img 
+                src="/logo.png" 
+                alt="Maumbica Comercial" 
+                className="h-10 w-10 object-contain"
+              />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-emerald-400 to-violet-400 bg-clip-text text-transparent">
               Maumbica Comercial

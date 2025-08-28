@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingBag, Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
 
 const Footer = () => {
   const footerLinks = {
@@ -46,8 +46,12 @@ const Footer = () => {
             {/* Company Info */}
             <div className="lg:col-span-2">
               <Link to="/" className="flex items-center space-x-2 mb-6">
-                <div className="p-2 bg-gradient-to-r from-emerald-500 to-violet-500 rounded-lg">
-                  <ShoppingBag className="h-6 w-6 text-white" />
+                <div className="flex-shrink-0">
+                  <img 
+                    src="/logo.png" 
+                    alt="Maumbica Comercial" 
+                    className="h-10 w-10 object-contain"
+                  />
                 </div>
                 <span className="text-xl font-bold bg-gradient-to-r from-emerald-400 to-violet-400 bg-clip-text text-transparent">
                   Maumbica Comercial
