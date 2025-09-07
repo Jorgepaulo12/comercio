@@ -55,7 +55,7 @@ const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose, product }) => 
       setIsSubmitted(true);
 
       // WhatsApp redirect com link do produto
-      const phone = '258860289475';
+      const phone = '258863723774';
       const productUrl = `${window.location.origin}/produtos?search=${encodeURIComponent(product.name)}&id=${product.id}`;
       const message = `Novo pedido%0A%0AProduto: ${encodeURIComponent(product.name)}%0APreco: ${encodeURIComponent(
         formatMZN(product.price)

@@ -34,13 +34,13 @@ const Contact = () => {
     {
       icon: Phone,
       title: 'Telefone',
-      details: ['+258 21 123 456', '+258 84 234 5678'],
+      details: ['+258 86 372 3774'],
       color: 'from-violet-500 to-violet-600',
     },
     {
       icon: Mail,
       title: 'Email',
-      details: ['geral@officepro.pt', 'vendas@officepro.pt'],
+      details: ['ecnmc84@gmail.com'],
       color: 'from-emerald-500 to-violet-500',
     },
     {
