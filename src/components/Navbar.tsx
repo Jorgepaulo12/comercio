@@ -19,9 +19,9 @@ const Navbar = () => {
 
   const navItems = [
     { name: 'Início', path: '/' },
-    { name: 'Produtos', path: '/produtos' },
-    { name: 'Sobre', path: '/sobre' },
-    { name: 'Contato', path: '/contato' },
+    { name: 'Produtos', path: '/#produtos' },
+    { name: 'Sobre', path: '/#sobre' },
+    { name: 'Contato', path: '/#contato' },
   ];
 
   const handleSearch = (e: React.FormEvent) => {
