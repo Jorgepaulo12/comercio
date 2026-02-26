@@ -83,7 +83,7 @@ const About = () => {
             <div className="relative">
               <div className="bg-gradient-to-br from-emerald-500/20 to-violet-500/20 rounded-2xl p-8">
                 <img
-                  src="https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg"
+                  src="https://www.maumbicacomercial.co.mz/logo.png"
                   alt="Nossa equipa"
                   className="w-full h-80 object-cover rounded-xl"
                 />
